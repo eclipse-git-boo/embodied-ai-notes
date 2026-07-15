@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'zh-CN' }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ page.description | default: site.description }}">
+    <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+  </head>
+  <body>
+    <div class="site-shell">
+      <aside class="sidebar" aria-label="学习笔记目录">
+        <a class="brand" href="{{ '/' | relative_url }}">
+          <span class="brand-mark">EI</span>
+          <span><strong>具身智能</strong><small>学习笔记</small></span>
+        </a>
+
+        <nav class="sidebar-nav">
+          <p class="nav-label">开始</p>
+          <a href="{{ '/' | relative_url }}" class="{% if page.url == '/' %}is-active{% endif %}">总览首页</a>
+          <a href="{{ '/学习笔记/04-六周学习计划.html' | relative_url }}">六周学习计划</a>
+          <a href="{{ '/学习笔记/08-论文索引与开源状态.html' | relative_url }}">论文地图与优先级</a>
+
+          <p class="nav-label">π₀.₅ 主线</p>
+          <a href="{{ '/学习笔记/06-pi05微调复现路线.html' | relative_url }}">微调复现路线</a>
+          <a href="{{ '/学习笔记/10-openpi论文到代码对照.html' | relative_url }}">论文到 openpi 代码</a>
+          <a href="{{ '/学习笔记/09-pi05复现前自测.html' | relative_url }}">复现前自测</a>
+
+          <p class="nav-label">VLA 论文</p>
+          <a href="{{ '/学习笔记/论文笔记/VLA/index.html' | relative_url }}">全部 VLA 笔记</a>
+          <a href="{{ '/学习笔记/论文笔记/VLA/OpenVLA.html' | relative_url }}">OpenVLA</a>
+          <a href="{{ '/学习笔记/论文笔记/VLA/pi0.html' | relative_url }}">π₀：Flow Matching</a>
+          <a href="{{ '/学习笔记/论文笔记/VLA/FAST-pi0-FAST.html' | relative_url }}">FAST / π₀-FAST</a>
+          <a href="{{ '/学习笔记/论文笔记/VLA/pi05.html' | relative_url }}">π₀.₅</a>
+
+          <p class="nav-label">WAM 论文</p>
+          <a href="{{ '/学习笔记/论文笔记/WAM/index.html' | relative_url }}">全部 WAM 笔记</a>
+          <a href="{{ '/学习笔记/论文笔记/WAM/DreamerV3.html' | relative_url }}">DreamerV3</a>
+          <a href="{{ '/学习笔记/论文笔记/WAM/UniPi.html' | relative_url }}">UniPi</a>
+          <a href="{{ '/学习笔记/论文笔记/WAM/IRASim.html' | relative_url }}">IRASim</a>
+
+          <p class="nav-label">工程资料</p>
+          <a href="{{ '/学习笔记/05-从论文到工程的知识地图.html' | relative_url }}">从论文到工程</a>
+          <a href="{{ '/学习笔记/01-硬件验收.html' | relative_url }}">硬件验收与安全</a>
+          <a href="{{ '/学习笔记/模板-实验记录.html' | relative_url }}">实验记录模板</a>
+          <a href="{{ '/学习笔记/模板-论文阅读卡.html' | relative_url }}">论文阅读卡</a>
+        </nav>
+
+        <div class="sidebar-note">
+          <span class="status-dot"></span>
+          当前主线：π₀.₅ 微调复现
+        </div>
+      </aside>
+
+      <div class="app-main">
+        <header class="topbar">
+          <a class="mobile-brand" href="{{ '/' | relative_url }}">具身智能学习笔记</a>
+          <span class="topbar-path">{{ page.title | default: '学习首页' }}</span>
+          <a class="repo-link" href="https://github.com/eclipse-git-boo/embodied-ai-notes" target="_blank" rel="noopener">GitHub ↗</a>
+        </header>
+
+        <main class="content-wrap">
+          {% unless page.url == '/' %}
+          <div class="page-kicker">学习资料库</div>
+          <h1 class="page-title">{{ page.title }}</h1>
+          {% endunless %}
+          <article class="document-content{% if page.url == '/' %} home-content{% endif %}">
+            {{ content }}
+          </article>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
