@@ -1,18 +1,50 @@
 ---
 layout: page
-title: Knowledge Insulating VLA：π₀.₅的知识隔离机制
+title: "π0.5 Knowledge Insulating VLA：隔离知识以保护控制"
+description: "理解如何在引入外部/通用知识时，避免破坏机器人动作策略。"
 ---
 
-原文：[官方 PDF](https://www.physicalintelligence.company/download/pi05_KI.pdf)；本地 PDF：[`VLA/论文/pi05-knowledge-insulating-vla.pdf`](../../../VLA/论文/pi05-knowledge-insulating-vla.pdf)。这是 π₀.₅路线的重要补充论文，应与主论文连读。
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/pi05-knowledge-insulating-02.png' | relative_url }}" alt="Knowledge Insulating VLA 论文图示"><figcaption>论文图示摘录（PDF 第 2 页）。来源：本库收录的 Knowledge Insulating VLA 论文 PDF。</figcaption></figure>
 
-## 它补上了什么
+## 1. 快读卡片
 
-标准 VLA 面临三角矛盾：自回归离散动作有利于利用 VLM 表征但推理慢；flow 动作快但新初始化 action expert 的梯度会破坏预训练主干；只冻结主干又会让机器人表征不足。论文的组合回答是：
+| 项目 | 内容 |
+|---|---|
+| 主题 | 以“知识隔离（knowledge insulating）”处理通用 VLM 知识与机器人策略之间的干扰。 |
+| 与 π0.5 的关系 | 它讨论的不是替换 π0.5 的 action flow，而是如何安全地吸收额外语义/先验。 |
+| 要回答的问题 | 外部知识何时帮助泛化，何时造成控制漂移或幻觉式动作？ |
 
-1. 同时训练离散 FAST 动作/语言 next-token 目标和连续 flow-matching 动作目标；
-2. 把 VLM 图文与机器人规划数据共同训练，降低机器人适配时的知识遗忘；
-3. 阻断 action expert 回传到预训练 backbone 的梯度（knowledge insulation），同时让主干直接接受离散动作监督。
+## 2. 动机与相关工作
 
-## 对 π₀.₅微调的启示
+通用视觉语言模型擅长物体和语言，却会带入与当前机器人无关、甚至不可靠的联想；而机器人策略需要严格遵守观测、坐标和约束。直接把新知识全量混入策略，常见结果是灾难性遗忘、动作头分布漂移，或在真实接触中“懂得更多但做得更差”。
 
-这说明“只调 LoRA/只调 action head”不是普适配方。当前 openpi 的公开 PyTorch 路径有功能边界（例如 π₀-FAST、LoRA、mixed precision 等支持状态随版本变化），实际复现必须以锁定 commit 的官方 README 和配置为准。先复现官方 LIBERO 配置，再复制/修改官方数据映射，不能凭论文公式自行拼装训练图。
+知识隔离的基本思想是让共享表征学习可迁移语义，而将对机器人动作最敏感的路径隔开或受控融合。它与 adapter、冻结骨干、检索增强、模块路由等工作相关，但评价必须回到闭环控制而不是语言问答分数。
+
+## 3. 方法理解框架
+
+可将策略抽象为 \(a = f_{\text{ctrl}}(z_{\text{robot}}, g(z_{\text{knowledge}}))\)。其中 `knowledge` 分支提供任务/物体先验，`robot` 分支保留当前传感与本体状态；门控 \(g\) 决定何时、以何种强度让知识进入控制。论文的具体模块应结合原图阅读，但复现时最重要的可验证假设是：关掉知识分支后，基础控制不应明显退化。
+
+<div class="method-flow"><span>当前观测 / 本体状态</span><b>→</b><span>控制路径</span><b>→</b><span>动作生成</span><br><span>外部语义 / 先验</span><b>→</b><span>隔离 adapter / 门控</span><b>↗</b></div>
+
+## 4. 实验应该看什么
+
+除平均成功率外，应看：已见任务是否保持、未知物体/语言组合是否提升、错误或冲突知识会不会使安全失败上升、以及消融掉隔离模块后的差异。只在静态图像或离线语言指标上获益，不能证明知识对真实控制有价值。
+
+## 5. 可复现性审计与学习价值
+
+| 项目 | 建议 |
+|---|---|
+| 可先复用 | 冻结视觉语言骨干、只训 action adapter/LoRA、显式记录知识输入。 |
+| 关键消融 | no-knowledge、always-on、gated、冻结与不冻结 action head。 |
+| 数据要求 | 在训练/验证集中人为构造“需要知识”和“只靠观测即可”的任务，才能看出隔离是否有效。 |
+| 最大风险 | 把外部文字或检索结果当成真实世界状态；必须由当前传感观测做最终落地。 |
+
+## 6. 算力、硬件与风险（学习规划，不在本机部署）
+
+| 目标 | 建议配置 | 备注 |
+|---|---|---|
+| Adapter / LoRA 消融 | 24–48 GB 单卡 | 先冻结基础策略，保证比较只改变知识路径。 |
+| 全参联合训练 | 多卡 80 GB 级 | 需同时保存基础任务回归集，防止“泛化提升”掩盖遗忘。 |
+| 在线使用 | 模型服务器与控制安全层解耦 | 知识分支超时/失败时应回退到观测驱动策略。 |
+
+对 π0.5 复现，最实用的原则是：**任何新知识模块都必须能被关闭、可评估、可回退**；先保证单任务闭环动作正确，再谈开放世界先验。

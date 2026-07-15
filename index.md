@@ -39,9 +39,9 @@ title: 具身智能学习笔记
   <h2>按主题浏览</h2>
   <div class="card-grid">
     <a class="nav-card" href="学习笔记/论文笔记/VLA/index.html">
-      <span class="card-tag">VLA · 5 篇</span>
+      <span class="card-tag">VLA / VA · 9 篇</span>
       <strong>VLA 论文笔记</strong>
-      <span>OpenVLA、π₀、FAST / π₀-FAST 与 π₀.₅。</span>
+      <span>OpenVLA、π₀、π₀.₅、FAST 与 LingBot VLA/VA 系列的精读报告。</span>
     </a>
     <a class="nav-card" href="学习笔记/论文笔记/WAM/index.html">
       <span class="card-tag">WAM · 4 篇</span>
