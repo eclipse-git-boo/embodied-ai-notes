@@ -1,0 +1,8 @@
+title: 具身智能学习笔记
+description: VLA、WAM 与 π₀.₅ 微调复现学习资料
+theme: minima
+markdown: kramdown
+lang: zh-CN
+exclude:
+  - README.md
+  - Gemfile
