@@ -3,14 +3,14 @@ layout: page
 title: VLA / Video-Action 论文精读
 ---
 
-本区使用统一的“动机 → 方法 → 实验 → 可复现性审计 → 算力/风险”报告结构。图示为论文 PDF 页面摘录，正文链接均指向原文或官方仓库。
+本区使用统一的“动机 → 方法 → 数据与实验 → 可复现性审计 → VLA Q&A → 算力/风险”精读结构。OpenVLA、π₀、π₀.₅ 已升级为**高质量样板**：每篇都含论文原图页、公式、可核验的一手来源和硬件审计；其余文章待样板确认后再统一扩展。
 
 ## π₀.₅ 复现主线
 
-1. [OpenVLA：把连续机器人动作变成语言 token](OpenVLA.html)
-2. [π₀：Flow Matching VLA 的动作生成范式](pi0.html)
+1. [OpenVLA：离散动作 token 的开放 VLA 基线](OpenVLA.html)
+2. [π₀：用 Flow Matching 生成连续动作块](pi0.html)
 3. [FAST / π₀-FAST：快速动作 token 化](FAST-pi0-FAST.html)
-4. [π₀.₅：面向开放世界泛化的 VLA](pi05.html)
+4. [π₀.₅：先预测子任务，再执行连续动作](pi05.html)
 5. [π₀.₅ Knowledge Insulating VLA：隔离知识以保护控制](pi05-knowledge-insulating.html)
 
 ## LingBot 系列（2026 补充）
