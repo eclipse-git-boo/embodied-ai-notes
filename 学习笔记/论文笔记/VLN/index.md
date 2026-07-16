@@ -13,11 +13,10 @@ title: VLN 论文与开源资料卡
 - [OmniNav：快慢双系统的统一导航与探索](OmniNav.html)
 - [InternVLA-N1：像素目标与潜在计划的双系统 VLN](InternVLA-N1.html)
 
-## 开源研究资料卡
+## TrackVLA / Om AI Lab VLN 演进
 
-- [OmTrackVLA：视觉导航与跟随的 0.6B 开源 VLA](OmTrackVLA.html)
-- [VLX-Go：短视野连续 waypoint 预测](VLX-Go.html)
+- [TrackVLA → OmTrackVLA → VLX-Go：跟踪导航路线演进](TrackVLA-OmAI-Lab-VLN.html)
 
 ## 建议阅读顺序
 
-先看 OmniNav 的“记忆/前沿 + 快慢系统”，再看 InternVLA-N1 如何把高层计划变成异步的潜在 token，最后看 Qwen-RobotNav 如何把任务模式和观测预算暴露给上层 agent。两张资料卡适合补齐工程接口：短历史、局部 waypoint、控制器分层和指标边界。
+先看 OmniNav 的“记忆/前沿 + 快慢系统”，再看 InternVLA-N1 如何把高层计划变成异步的潜在 token，最后看 Qwen-RobotNav 如何把任务模式和观测预算暴露给上层 agent。再用 TrackVLA → Om AI Lab VLN 路线补齐动态跟随、短历史、局部 waypoint、控制器分层和指标边界。
