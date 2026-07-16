@@ -27,7 +27,7 @@ title: OmniNav：快慢双系统的统一导航与探索
 
 <figure class="paper-figure">
   <img src="{{ '/assets/paper-figures/vln/omninav-architecture.png' | relative_url }}" alt="OmniNav 快思考与慢思考系统框图" />
-  <figcaption><strong>论文 Fig. 1（局部裁切）。</strong>上半部为共享 VLM + 条件 diffusion 的快速 waypoint 生成；下半部为利用 frontier 与图像记忆的慢速全局规划。</figcaption>
+  <figcaption><strong>论文 Fig. 1。</strong>上半部为共享 VLM + 条件 diffusion 的快速 waypoint 生成；下半部为利用 frontier 与图像记忆的慢速全局规划。</figcaption>
 </figure>
 
 | 模块 | 作用 | 常见误读 |
@@ -68,7 +68,7 @@ $$
 
 <figure class="paper-figure">
   <img src="{{ '/assets/paper-figures/vln/omninav-frontier-reasoning.png' | relative_url }}" alt="OmniNav 基于前沿和图像记忆的浴室搜索推理示例" />
-  <figcaption><strong>论文 Fig. 2（局部裁切）。</strong>图中不是直接给出动作，而是把已见视角、地图前沿和目标语义联系起来，挑选下一探索子目标。</figcaption>
+  <figcaption><strong>论文 Fig. 2。</strong>图中不是直接给出动作，而是把已见视角、地图前沿和目标语义联系起来，挑选下一探索子目标。</figcaption>
 </figure>
 
 作者维护 3D 占据图以区分已探索/未知区域；每个 frontier 关联其附近、带姿态的历史图像。慢系统对这些视觉代理做语义推理，例如“找浴室”并非盲选最近 frontier，而是比较其可能通向的房间类型。这是语言 grounding 与空间记忆的耦合点；地图误差、物体遮挡和错误语义先验都可能使它选错边界。

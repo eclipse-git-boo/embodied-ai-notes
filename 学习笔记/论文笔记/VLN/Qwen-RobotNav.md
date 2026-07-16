@@ -29,7 +29,7 @@ title: Qwen-RobotNav：可配置的 Agentic 导航执行器
 
 <figure class="paper-figure">
   <img src="{{ '/assets/paper-figures/vln/qwen-robotnav-architecture.png' | relative_url }}" alt="Qwen-RobotNav 的上层 planner、观测编码、Qwen3-VL 和 waypoint 头框图" />
-  <figcaption><strong>论文 Fig. 2（局部裁切）。</strong>它同时覆盖模型总览、输入输出和 agent 接口：上层只改任务模式/观测参数，底层权重不必随子任务切换。</figcaption>
+  <figcaption><strong>论文 Fig. 2。</strong>它同时覆盖模型总览、输入输出和 agent 接口：上层只改任务模式/观测参数，底层权重不必随子任务切换。</figcaption>
 </figure>
 
 ### 1.2 模块责任表
@@ -84,7 +84,7 @@ $$
 
 <figure class="paper-figure">
   <img src="{{ '/assets/paper-figures/vln/qwen-robotnav-results.png' | relative_url }}" alt="Qwen-RobotNav 多类导航基准的汇总柱状图" />
-  <figcaption><strong>论文 Fig. 1（局部裁切）。</strong>同一模型在 instruction following、searching、tracking、embodied QA 和 driving 多组基准上比较；这是跨任务覆盖的证据，不能替代每个 benchmark 的协议、数据划分与失败率分析。</figcaption>
+  <figcaption><strong>论文 Fig. 1。</strong>同一模型在 instruction following、searching、tracking、embodied QA 和 driving 多组基准上比较；这是跨任务覆盖的证据，不能替代每个 benchmark 的协议、数据划分与失败率分析。</figcaption>
 </figure>
 
 论文在 R2R VLN-CE 上报告 8B 模型 SR 72.1%，在 RxR Val-Unseen 报告 SR 76.5%；同时在跟踪、EQA 与驾驶基准报告竞争性结果。读者应单独核对 SR、SPL、路径长度、是否 Val-Unseen 以及是否闭环，不能把不同任务的百分数横向平均。

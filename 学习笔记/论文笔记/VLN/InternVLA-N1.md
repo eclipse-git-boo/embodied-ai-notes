@@ -20,7 +20,7 @@ title: InternVLA-N1：像素目标与潜在计划的双系统 VLN
 
 <figure class="paper-figure">
   <img src="{{ '/assets/paper-figures/vln/internvla-n1-architecture.png' | relative_url }}" alt="InternVLA-N1 的 System 2、System 1 与控制器异步框图" />
-  <figcaption><strong>论文 Fig. 4（局部裁切）。</strong>这是理解全篇最关键的图：System 2 以 2 Hz 产出像素目标/潜在计划，System 1 以 30 Hz 读最新图像并产生轨迹，控制器约 200 Hz 执行。</figcaption>
+  <figcaption><strong>论文 Fig. 4。</strong>这是理解全篇最关键的图：System 2 以 2 Hz 产出像素目标/潜在计划，System 1 以 30 Hz 读最新图像并产生轨迹，控制器约 200 Hz 执行。</figcaption>
 </figure>
 
 | 接口 | System 2（慢） | System 1（快） |
@@ -56,8 +56,13 @@ System 1 是多目标条件的 diffusion policy：输入当前观测与中间计
 ## 3. InternData-N1：数据为何是方法的一半
 
 <figure class="paper-figure">
-  <img src="{{ '/assets/paper-figures/vln/internvla-n1-data.png' | relative_url }}" alt="InternData-N1 数据比例和生成过滤流程图" />
-  <figcaption><strong>论文 Fig. 2–3（局部裁切）。</strong>上部给出数据规模/指令关键词，下部展示场景资产、轨迹、指令微调与过滤的流水线。</figcaption>
+  <img src="{{ '/assets/paper-figures/vln/internvla-n1-data-overview.png' | relative_url }}" alt="InternData-N1 数据组成与指令关键词图" />
+  <figcaption><strong>论文 Fig. 2。</strong>数据组成的同心环与指令关键词：不同圈层对应场景、距离、图像与指令的分布。</figcaption>
+</figure>
+
+<figure class="paper-figure">
+  <img src="{{ '/assets/paper-figures/vln/internvla-n1-data-pipeline.png' | relative_url }}" alt="InternData-N1 数据生成、指令微调与过滤流水线" />
+  <figcaption><strong>论文 Fig. 3。</strong>从场景资产和导航轨迹出发，经指令微调与数据过滤，形成最终训练数据。</figcaption>
 </figure>
 
 论文报告 3,154+ 场景、约 4,839.9 km 轨迹、53.5M 图像和约 0.8M 指令。数据由仿真场景、路径规划、渲染、开源多模态模型生成/改写指令与过滤组成。复现实验首先要核对轨迹是否无碰撞、相机投影能否把位置转成 pixel goal、语言是否与 clip 对齐；这些比“下载到多少图像”更决定是否可学。

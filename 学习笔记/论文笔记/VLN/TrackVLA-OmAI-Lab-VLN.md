@@ -37,7 +37,7 @@ title: TrackVLA → OmTrackVLA → VLX-Go：跟踪导航路线演进
 
 <figure class="paper-figure">
   <img src="{{ '/assets/paper-figures/vln/trackvla-architecture.png' | relative_url }}" alt="TrackVLA 的视频编码、共享 VLM、跟踪扩散分支与识别语言分支" />
-  <figcaption><strong>TrackVLA 论文 Fig. 2（局部裁切）。</strong>视频历史、当前帧与语言先进入共享 video VLM；`[Track]` token 选择扩散轨迹分支，其他输入走语言建模分支。这是“识别—规划共用表征”的具体含义。</figcaption>
+  <figcaption><strong>TrackVLA 论文 Fig. 2。</strong>视频历史、当前帧与语言先进入共享 video VLM；`[Track]` token 选择扩散轨迹分支，其他输入走语言建模分支。这是“识别—规划共用表征”的具体含义。</figcaption>
 </figure>
 
 | 模块 | 做什么 | 不应误解成 |
@@ -68,7 +68,7 @@ title: TrackVLA → OmTrackVLA → VLX-Go：跟踪导航路线演进
 
 <figure class="paper-figure">
   <img src="{{ '/assets/paper-figures/vln/trackvla-overview.png' | relative_url }}" alt="TrackVLA 的数据、模型和鲁棒跟踪场景总览" />
-  <figcaption><strong>TrackVLA 论文 Fig. 1（局部裁切）。</strong>左侧是 embodied tracking 数据，右侧是开放世界识别数据；下方展示动态、长程和跨域跟踪环境。</figcaption>
+  <figcaption><strong>TrackVLA 论文 Fig. 1。</strong>左侧是 embodied tracking 数据，右侧是开放世界识别数据；下方展示动态、长程和跨域跟踪环境。</figcaption>
 </figure>
 
 传统“检测器 → 规划器”流水线会把检测错误传给规划。TrackVLA 的选择是共享主干、双头解码：语言头让表征持续回答“目标是谁、长什么样”，扩散头则把同一隐藏状态变为轨迹。这种联合并不消除遮挡和误识别，而是让两种信号在训练时共同约束同一视觉语言表示。
@@ -79,7 +79,7 @@ title: TrackVLA → OmTrackVLA → VLX-Go：跟踪导航路线演进
 
 <figure class="paper-figure">
   <img src="{{ '/assets/paper-figures/vln/trackvla-diffusion.png' | relative_url }}" alt="TrackVLA 的锚点高斯噪声生成和锚点去噪过程" />
-  <figcaption><strong>TrackVLA 论文 Fig. 3（局部裁切）。</strong>作者先聚类训练轨迹得到 anchor，再在 anchor 附近加噪、去噪和评分；论文将其作为比普通扩散策略更快的轨迹先验。</figcaption>
+  <figcaption><strong>TrackVLA 论文 Fig. 3。</strong>作者先聚类训练轨迹得到 anchor，再在 anchor 附近加噪、去噪和评分；论文将其作为比普通扩散策略更快的轨迹先验。</figcaption>
 </figure>
 
 可把轨迹表示为 $\tau_i=\{(x_j,y_j,\theta_j)\}_{j=1}^{N_w}$。作者先以 K-means 得到 $M$ 个常见轨迹模式 $\{\bar\tau_i\}_{i=1}^{M}$，在每个模式附近采样噪声：
