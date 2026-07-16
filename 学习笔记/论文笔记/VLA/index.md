@@ -3,21 +3,30 @@ layout: page
 title: VLA / Video-Action 论文精读
 ---
 
-本区使用统一的“动机 → 方法 → 数据与实验 → 可复现性审计 → VLA Q&A → 算力/风险”精读结构。OpenVLA、π₀、π₀.₅ 已升级为**高质量样板**：每篇都含论文原图页、公式、可核验的一手来源和硬件审计；其余文章待样板确认后再统一扩展。
+# VLA / Video-Action 论文精读
 
-## π₀.₅ 复现主线
+本区采用统一阅读顺序：**输入与动作接口 → 模型模块 → 数据/训练 → 结果与消融 → 局限 → 硬件审计 → 领域 Q&A**。所有论文图均从原论文裁切为独立证据图：模型总览、数据/训练、输入输出、任务环境、主结果、消融/规模/效率六类至少覆盖一次，同一图不会重复出现。
 
-1. [OpenVLA：离散动作 token 的开放 VLA 基线](OpenVLA.html)
-2. [π₀：用 Flow Matching 生成连续动作块](pi0.html)
-3. [FAST / π₀-FAST：快速动作 token 化](FAST-pi0-FAST.html)
-4. [π₀.₅：先预测子任务，再执行连续动作](pi05.html)
-5. [π₀.₅ Knowledge Insulating VLA：隔离知识以保护控制](pi05-knowledge-insulating.html)
+## π0.5 复现主线
 
-## LingBot 系列（2026 补充）
+1. [OpenVLA：离散 action token 的开源 VLA 基线](OpenVLA.html)
+2. [π0：用 Flow Matching 生成连续动作](pi0.html)
+3. [FAST / π0‑FAST：把高频动作压缩为可预测 token](FAST-pi0-FAST.html)
+4. [π0.5：开放世界 VLA](pi05.html)
+5. [Knowledge Insulating VLA：用离散知识保护连续控制](pi05-knowledge-insulating.html)
+6. [Qwen‑VLA：统一操作、导航与具身理解的 DiT 动作专家](Qwen-VLA.html)
 
-- [LingBot-VLA：务实的大规模多本体 VLA](LingBot-VLA.html)
-- [LingBot-VLA 2.0：统一 55 维动作与预测动力学](LingBot-VLA-2.0.html)
-- [LingBot-VA：因果视频-动作世界模型](LingBot-VA.html)（按要求放在 VLA 区，范式上属于 WAM/VA）
-- [LingBot-VA 2.0：原生视频-动作预训练](LingBot-VA-2.0.html)（同上）
+建议把前五篇作为“直接 policy 与动作表示”主线。Qwen‑VLA 增加多任务、VLN 和本体提示的统一接口，适合作为 π0.5 后的对照阅读。
 
-推荐先完成 π₀.₅ 主线；LingBot-VLA 用于学习多本体数据与后训练工程，LingBot-VA 用于理解世界模型扩展，不应同时作为第一套真机复现对象。
+## LingBot 系列：规模、统一动作与 Video‑Action
+
+- [LingBot‑VLA：20k 小时多双臂数据与高吞吐后训练](LingBot-VLA.html)
+- [LingBot‑VLA 2.0：统一 55 维动作与预测动力学](LingBot-VLA-2.0.html)
+- [LingBot‑VA：因果视频—动作世界模型](LingBot-VA.html)
+- [LingBot‑VA 2.0：规划器、原生视频动作预训练与前瞻推理](LingBot-VA-2.0.html)
+
+其中 LingBot‑VA 两篇放在本区以便与 VLA 对照，但方法范式属于 Video‑Action/WAM：请重点区分“直接动作策略”与“动作后果预测是否参与决策”。
+
+## 学习边界
+
+本仓库面向论文阅读、离线数据处理和仿真/日志复现准备。硬件部分仅给出全量训练、微调和推理的规划信息；不在这台学习机上执行或宣称验证真实机器人部署。
