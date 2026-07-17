@@ -20,10 +20,9 @@ paper_domain: WAM
 
 | 类别 | 证据 | 放置位置 |
 |---|---|---|
-| 总体/I-O/动作 | 官方概览图与论文方法图 | 1 |
-| 数据/训练 | 论文训练配方 | 3 |
-| 任务/环境、主结果 | 六个仿真 benchmark 与真实组合泛化 | 5 |
-| 消融/效率 | latent foresight、语义保留与 action-only 推理 | 2、6 |
+| 总体/I-O/动作 | 论文 Fig. 2 | 1 |
+| 数据/训练、任务/环境、主结果 | 论文 Fig. 1 | 1 |
+| 消融/效率 | 论文 Fig. 4 与 action-only 推理设计 | 2、6 |
 
 ## 1. 模型原理总览：输入、输出与模块分工
 
@@ -34,7 +33,9 @@ paper_domain: WAM
 | foresight | 少量可学习 foresight tokens | 从共享上下文压缩、查询任务相关的未来 latent。 |
 | 输出 | Flow Matching 连续 action chunk | 推理时只保留动作路径。 |
 
-<figure class="paper-figure"><img src="{{ '/assets/paper-figures/samples/internvla-a1-fig2-framework.png' | relative_url }}" alt="A 系列三分工示意：理解、未来预测和动作" /><figcaption><strong>与 A1 的结构对照图。</strong>覆盖：模型总体与 I/O。A1.5 保留“理解—预测—动作”职责，但将中间预测由像素生成改为 latent foresight 查询；该图用于理解继承关系，不冒充 A1.5 原图。</figcaption></figure>
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/samples/internvla-a15-fig1-overview.png' | relative_url }}" alt="InternVLA-A1.5 的数据、训练推理架构、仿真与真实任务总览" /><figcaption><strong>论文 Fig. 1（裁切）。</strong>覆盖：数据与训练配方、任务环境、主结果。图中清楚区分训练期的视觉生成模型与推理期的 VLM/统一专家；下方同时给出仿真及真实任务证据。</figcaption></figure>
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/samples/internvla-a15-fig2-framework.png' | relative_url }}" alt="InternVLA-A1.5 的预训练 VLM、统一专家、foresight token 与动作查询框图" /><figcaption><strong>论文 Fig. 2（裁切）。</strong>覆盖：模型总体、输入输出与动作表示。预训练 Qwen3.5-2B VLM 和轻量 unified expert 只通过 full-attention 层交换上下文；foresight token 只为训练期未来预测服务，动作 query 负责连续控制。</figcaption></figure>
 
 **输入到输出**：1）VLM 编码图像和指令；2）foresight token 从共享上下文中提取与任务相关的未来信息；3）冻结 WAN2.2-5B 视频模型在训练期提供该 latent 的监督；4）动作查询在统一专家中以 Flow Matching 预测连续 action chunk；5）部署时不加载视频分支，重新观测后滚动推理。
 
@@ -53,6 +54,8 @@ $$
 $$
 
 $q_\phi$ 是 foresight token 查询器，$h_{ctx}$ 是多模态上下文，$z_{future}^{video}$ 是冻结视频生成器给出的目标 latent；$\lambda$ 为权重。此式是阅读性抽象，具体 token 布局和损失请以论文/实现为准。
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/samples/internvla-a15-fig4-foresight.png' | relative_url }}" alt="InternVLA-A1.5 通过 foresight query 和冻结 WAN 视频模型学习未来潜变量的机制" /><figcaption><strong>论文 Fig. 4（裁切）。</strong>覆盖：消融/效率的机制依据。梯度通过冻结视频模型的条件路径回传到 foresight token，而部署时不运行视频生成器；这正是 A1.5 相对 A1 的关键效率取舍。</figcaption></figure>
 
 ## 3. 官方代码：训练、微调、评估怎样组织
 
@@ -99,6 +102,7 @@ $q_\phi$ 是 foresight token 查询器，$h_{ctx}$ 是多模态上下文，$z_{f
 
 ## 7. 来源
 
-- [论文](https://arxiv.org/abs/2607.04988)。
-- [官方代码与 README](https://github.com/InternRobotics/InternVLA-A-series)。
-- [官方项目页](https://internrobotics.github.io/internvla-a15.github.io/)。
+- **论文事实：**[论文](https://arxiv.org/abs/2607.04988)。
+- **官方代码：**[InternVLA-A-series README](https://github.com/InternRobotics/InternVLA-A-series)。
+- **辅助解读：**[官方项目页](https://internrobotics.github.io/internvla-a15.github.io/)用于理解模型卡与发布入口；独立长文尚不足以替代论文。
+- **个人推断：**4090 与 SO-ARM101 的资源/风险说明仅为离线学习规划，不是论文或仓库给出的成功承诺。

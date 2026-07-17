@@ -56,7 +56,7 @@ title: Qwen-RobotNav：可配置的 Agentic 导航执行器
 | 模型总览、I/O、动作表示 | Fig. 2 | 本节 |
 | 任务/环境、主结果 | Fig. 1 基准汇总 | 第 4 节 |
 | 数据/训练 | Fig. 5 数据分布（论文） | 第 3 节 |
-| 消融/规模/效率 | Fig. 14–15 缩放与 token 消融（论文） | 第 5 节 |
+| 消融/规模/效率 | Fig. 3（token 分配与预算） | 第 5 节 |
 
 ## 2. 关键机制：让“上下文策略”也可配置
 
@@ -80,6 +80,8 @@ $$
 
 论文报告 15.6M 样本，其中导航轨迹规划数据占 85%，导航相关视觉语言推理占 15%；覆盖指令跟随、点目标、物体搜索、目标跟踪和自动驾驶。学习时需要记录的不是只有样本总数，而是每条数据的任务模式、相机外参、时间顺序、waypoint 坐标系及归一化尺度——这些字段若不一致，模型即使收敛也不可比较。
 
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/vln/qwen-robotnav-data.png' | relative_url }}" alt="Qwen-RobotNav 论文 Fig. 5：15.6M 样本的按数据集与任务类别分布" /><figcaption><strong>论文 Fig. 5（裁切）。</strong>覆盖：数据/训练。左侧列出各导航轨迹与视觉语言来源的样本数，右侧是任务类别汇总；总量 15.6M 不能替代对坐标系、相机标定和闭环质量的逐项核验。</figcaption></figure>
+
 ## 4. 结果怎样读
 
 <figure class="paper-figure">
@@ -92,6 +94,8 @@ $$
 ## 5. 消融与局限
 
 论文的缩放/预算消融回答的是“在其数据、模型和评测协议内，更多参数或不同 $B,\gamma$ 是否有效”。它没有证明任何预算策略会在所有传感器、相机延迟与控制频率下成立。尤其是：多模态标签与 prompt 能描述本体，却不能自动校正相机外参、轮式/足式动力学差异或碰撞安全。
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/vln/qwen-robotnav-token-allocation.png' | relative_url }}" alt="Qwen-RobotNav 论文 Fig. 3：时间衰减、每时刻 token 预算和多相机 token 分配矩阵" /><figcaption><strong>论文 Fig. 3（裁切）。</strong>覆盖：消融/规模/效率相关的接口机制。$gamma$ 控制新旧帧权重，$B$ 控制总体视觉 token 预算，矩阵展示预算在时间与相机之间的分配；它是可配置上下文策略的可视化，不是独立的安全验证。</figcaption></figure>
 
 ## 6. 算力与硬件需求（学习与部署规划）
 

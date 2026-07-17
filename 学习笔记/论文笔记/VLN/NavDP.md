@@ -21,9 +21,9 @@ paper_domain: VLN
 | 类别 | 证据 | 放置位置 |
 |---|---|---|
 | 总体/I-O/动作 | Fig. 2 | 1 |
-| 数据/训练 | Fig. 1、仿真数据引擎 | 3 |
-| 任务/环境、主结果 | Fig. 1 与跨本体实验 | 4 |
-| 消融/效率 | 特权 critic、real-to-sim 比例实验 | 5 |
+| 数据/训练、任务/环境 | Fig. 1（数据引擎与跨本体场景） | 3 |
+| 主结果 | Fig. 4（基线失败与 NavDP 成功案例） | 5 |
+| 消融/效率 | Table V（输入、critic 选择、增强与 NoGoal 消融） | 5 |
 
 ## 1. 模型原理总览：输入、输出与模块分工
 
@@ -33,6 +33,8 @@ paper_domain: VLN
 | 共享编码 | 视觉 token + goal token 经 transformer 压缩 | 部署时不输入地图或 ESDF。 |
 | 输出 | 多条未来 waypoint 轨迹，形式为相对 $(\Delta x,\Delta y,\Delta\omega)$ | 论文说明为 24 步候选轨迹；必须再经底层跟踪和碰撞/停止层。 |
 | critic | 给候选轨迹打安全/价值分数 | 训练标签来自仿真的特权 ESDF，真机不可直接访问。 |
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/vln/navdp-fig2-framework.png' | relative_url }}" alt="NavDP 论文 Fig. 2：RGB、深度、PointGoal、轨迹编码和共享 Transformer 连接 actor 与 critic 两个头" /><figcaption><strong>论文 Fig. 2（裁切）。</strong>覆盖：模型总体、输入输出与动作表示。多帧 RGB、单帧深度、PointGoal 和带噪专家轨迹进入共享 Transformer；actor 学噪声预测以生成轨迹，critic 学轨迹安全评分以完成候选选择。</figcaption></figure>
 
 **数据流**：1）局部 RGB-D 与目标被编码；2）扩散头从噪声生成候选 waypoint；3）critic 读取共享特征与轨迹 token；4）选择较安全候选；5）外部控制器跟踪短前缀，下一轮重新观测。
 
@@ -48,7 +50,9 @@ $\tau$ 为真值 waypoint 序列，$\tau_k$ 为加噪序列，$o,d,g$ 分别为 
 
 ## 3. 数据与特权信息
 
-论文报告约 1,244 个场景、363.2 km 仿真导航轨迹，并称生成速度约为 2,500 trajectories/GPU/day。特权信息只在训练数据生成和标签构造中出现：全局规划产生高质量演示，ESDF 标注候选轨迹的碰撞风险。部署接口不需要建图，但这不意味着系统不再受传感器遮挡、深度失真或动态行人影响。
+论文 Table I 报告数据集含 3,154 个场景、1,627.1 km 轨迹和约 40M 图像；论文文字另说明数据引擎覆盖 3,000+ 场景。特权信息只在训练数据生成和标签构造中出现：全局规划产生高质量演示，ESDF 标注候选轨迹的碰撞风险。部署接口不需要建图，但这不意味着系统不再受传感器遮挡、深度失真或动态行人影响。
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/vln/navdp-fig1-overview.png' | relative_url }}" alt="NavDP 论文 Fig. 1：可扩展仿真数据引擎、导航扩散策略和多种真实机器人场景" /><figcaption><strong>论文 Fig. 1（裁切）。</strong>覆盖：数据/训练与任务/环境。上方是大规模仿真复刻、按本体规划、域随机化和并行渲染；中间以动作与 critic 监督训练策略；下方展示跨四足、轮式与人形平台的真实环境路线。</figcaption></figure>
 
 ## 4. 与 InternVLA-N1 的发展关系
 
@@ -63,6 +67,18 @@ $\tau$ 为真值 waypoint 序列，$\tau_k$ 为加噪序列，$o,d,g$ 分别为 
 ## 5. 证据、局限与 VLN Q&A
 
 论文在四足、轮式和人形本体、室内外环境中评估，并探索 Gaussian Splatting real-to-sim 数据以缩小域差异。主张的证据是无真实机器人训练的跨本体迁移；需要警惕的是，成功率并不能显示每次临近障碍时的安全裕度。
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/vln/navdp-fig4-results.png' | relative_url }}" alt="NavDP 论文 Fig. 4：与 iPlanner、EgoPlanner、ViPlanner 的路径比较，展示三类基线失败和 NavDP 成功" /><figcaption><strong>论文 Fig. 4（裁切）。</strong>主结果的定性证据：图中基线分别出现短记忆导致碰撞、规划不一致或对不规则几何误判；NavDP 轨迹在示例中避开对应障碍。它说明案例行为，不等同于所有环境的安全证明。</figcaption></figure>
+
+| Table V 消融设置 | Sim-Home SR / SPL | Sim-Commercial SR / SPL | 读法 |
+|---|---:|---:|---|
+| w/o Depth | 47.8 / 44.3 | 66.1 / 63.7 | 只用 RGB 会明显下降 |
+| w/o RGB | 53.9 / 49.6 | 70.2 / 66.7 | 只用深度也不足 |
+| w/o Multiframe RGB | 56.9 / 51.7 | 72.0 / 68.2 | 历史视觉有价值 |
+| w/o Selection | 53.1 / 49.0 | 65.0 / 62.5 | critic 候选选择有价值 |
+| Original NavDP | 60.3 / 54.7 | 74.1 / 70.5 | 论文完整配置 |
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/vln/navdp-table5-ablation.png' | relative_url }}" alt="NavDP 论文 Table V：模态、候选选择、增强和 NoGoal 训练目标的消融结果" /><figcaption><strong>论文 Table V（裁切）。</strong>消融/效率证据。表格将输入模态、历史帧、critic 选择、轨迹增强及 NoGoal 目标逐一移除；上表是便于阅读的关键行转写，完整行以论文原表为准。</figcaption></figure>
 
 **Q：语言 grounding 在哪里？** A：NavDP 的主问题是目标条件导航，重点是局部视觉与 PointGoal，不是长自然语言 route VLN。  
 **Q：空间记忆是什么？** A：没有显式拓扑图；历史 RGB token 提供短期上下文。  
@@ -81,6 +97,7 @@ $\tau$ 为真值 waypoint 序列，$\tau_k$ 为加噪序列，$o,d,g$ 分别为 
 
 ## 7. 来源
 
-- [论文](https://arxiv.org/abs/2505.08712)。
-- [官方代码](https://github.com/InternRobotics/NavDP)。
-- [InternNav：N1 与 NavDP 的组合说明](https://github.com/InternRobotics/InternNav)。
+- **论文事实：**[论文](https://arxiv.org/abs/2505.08712)。
+- **官方代码：**[NavDP](https://github.com/InternRobotics/NavDP)。
+- **辅助解读：**[官方项目页](https://wzcai99.github.io/navigation-diffusion-policy.github.io/)，用于核对框图与系统入口，不替代原论文。
+- **个人推断：**硬件与安全边界只用于离线学习规划；[InternNav：N1 与 NavDP 的组合说明](https://github.com/InternRobotics/InternNav)用于理解系统关系。

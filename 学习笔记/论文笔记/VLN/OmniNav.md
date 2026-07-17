@@ -52,7 +52,7 @@ title: OmniNav：快慢双系统的统一导航与探索
 | 模型总览、I/O、动作表示 | Fig. 1 | 本节 |
 | 任务/环境、空间记忆 | Fig. 2 | 第 3 节 |
 | 数据/训练 | Fig. 3（论文数据组成） | 第 4 节 |
-| 主结果、消融/效率 | 论文 benchmark 与 5 Hz 报告 | 第 5 节 |
+| 主结果、消融/效率 | Table 1（Val-Unseen 对比，含 w/o policy-head） | 第 5 节 |
 
 ## 2. 为什么用快慢双系统
 
@@ -77,9 +77,13 @@ $$
 
 论文将导航数据和通用视觉语言数据共同训练，明确包含 caption、referring/grounding、Embodied QA 等，以增强对泛化指令与开放词汇物体的理解。读论文时需追问：这些通用数据提升的究竟是目标识别、指代消解还是路径规划？它们不能替代连续控制数据和闭环恢复数据。
 
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/vln/omninav-data.png' | relative_url }}" alt="OmniNav 论文 Fig. 3：导航任务、Embodied QA、通用 MLLM 与 grounding/referring 四类训练数据" /><figcaption><strong>论文 Fig. 3（裁切）。</strong>覆盖：数据/训练。图把导航任务、具身问答、通用视觉语言与指代/grounding 数据拆开，说明作者把语言理解与连续 waypoint 学习放进同一训练配方，而非只用导航轨迹。</figcaption></figure>
+
 ## 5. 结果与边界
 
 论文/项目页报告多基准 SOTA 及真机 5 Hz 闭环。这里不将不同 benchmark 的 SR、SPL、导航误差混为一项“总分”：SR 关心到达，SPL 还惩罚绕路，碰撞率/停止误差则反映安全和完成判定。快慢系统的核心风险也在接口处：慢系统给出语义正确但几何不可达的坐标时，快系统能否恢复取决于局部视觉、重规划频率与控制层。
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/vln/omninav-table1-results.png' | relative_url }}" alt="OmniNav 论文 Table 1：R2R-CE 与 RxR-CE Val-Unseen 基准对比，包含去除 policy head 的消融" /><figcaption><strong>论文 Table 1（裁切）。</strong>覆盖：主结果与消融。表中在 R2R-CE / RxR-CE Val-Unseen 协议比较既有方法、OmniNav 和去除 policy head 的变体；结果只能在对应观测与评测设置内解释。</figcaption></figure>
 
 ## 6. 算力与硬件需求（学习与部署规划）
 

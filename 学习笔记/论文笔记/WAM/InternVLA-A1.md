@@ -20,10 +20,9 @@ paper_domain: WAM
 
 | 类别 | 证据 | 放置位置 |
 |---|---|---|
-| 模型总体、I/O、动作 | Fig. 2 | 1.2 |
-| 数据/训练 | Fig. 1 的多源数据配方 | 3 |
-| 任务/环境、主结果 | Fig. 4–7 | 5 |
-| 消融/规模 | Fig. 8–9 | 5 |
+| 模型总体、I/O、动作 | Fig. 2 | 1 |
+| 数据/训练、任务/环境、主结果 | Fig. 1（多源数据到三类评测）与 Fig. 6（动态任务） | 3、5 |
+| 消融/规模 | Fig. 9（移除 generation expert） | 5 |
 
 ## 1. 模型原理总览：输入、输出与模块分工
 
@@ -52,6 +51,8 @@ paper_domain: WAM
 
 论文将合成机器人轨迹、真实机器人数据和人类第一视角视频混合预训练；其中 InternData-A1 提供大规模可组合仿真，真实数据补物理真实性，人类视频补视觉先验。论文披露 A1 使用 InternData-A1 与 Agibot-World 的混合数据，覆盖 533M+ 帧。
 
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/samples/internvla-a1-fig1-overview.png' | relative_url }}" alt="InternVLA-A1 论文 Fig. 1：人类视频、合成数据和真实世界数据流入理解、生成和动作模块，并展示静态、动态和仿真评测" /><figcaption><strong>论文 Fig. 1（裁切）。</strong>覆盖：数据/训练、任务/环境与主结果。三种数据源分别补充视觉先验、可控合成轨迹和真实接触分布；下方以静态操控、动态操控和仿真基准展示评测范围。该图只在此处使用。</figcaption></figure>
+
 动作分支的核心可抽象为条件 Flow Matching：
 
 $$
@@ -71,6 +72,10 @@ $$
 ## 5. 证据、边界与 WAM Q&A
 
 论文在真实静态/动态任务及 RoboTwin 2.0 上比较基线，并用预训练和 generation expert 的消融检查两个设计。正确读法是：这些证据支持“未来预测辅助有收益”，但不能推出任意场景下未来帧都物理正确。
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/samples/internvla-a1-fig6-results.png' | relative_url }}" alt="InternVLA-A1 在 Express Sorting 和 In-motion Ingredient Picking 动态任务上的成功率比较" /><figcaption><strong>论文 Fig. 6（裁切）。</strong>主结果证据：在两个动态、时序敏感任务上，3B 版本的柱状结果高于图中各基线。应把它读作指定任务与协议下的成功率，而不是泛化安全保证。</figcaption></figure>
+
+<figure class="paper-figure"><img src="{{ '/assets/paper-figures/samples/internvla-a1-fig9-ablation.png' | relative_url }}" alt="InternVLA-A1 移除 generation expert 前后的十二个真实任务成功率消融" /><figcaption><strong>论文 Fig. 9（裁切）。</strong>消融证据：比较有、无 generation expert 的 3B 模型；平均成功率从 57.6% 增至 77.0%，且图中多数任务提升。它验证的是该模块在论文采样任务上的贡献，不能单独证明所有预测帧都准确。</figcaption></figure>
 
 **Q：世界状态是什么？** A：主要是图像/视觉 latent 与共享多模态表示；没有显式可编辑的物体状态图。  
 **Q：动作如何影响预测？** A：动作专家与生成专家的具体条件路径由 MoT/共享注意力耦合；应从论文实现继续核对时序和 action horizon。  
@@ -92,6 +97,7 @@ $$
 
 ## 7. 来源
 
-- [论文](https://arxiv.org/abs/2601.02456)；本地归档：`WAM/论文/InternVLA-A1-2601.02456.pdf`。
-- [官方代码与模型入口](https://github.com/InternRobotics/InternVLA-A-series)。
-- [InternData-A1](https://huggingface.co/datasets/InternRobotics/InternData-A1)。
+- **论文事实：**[论文](https://arxiv.org/abs/2601.02456)；本地归档：`WAM/论文/InternVLA-A1-2601.02456.pdf`。
+- **官方代码：**[InternVLA-A-series](https://github.com/InternRobotics/InternVLA-A-series)。
+- **辅助解读：**未找到比官方论文、项目材料更完整且可核验的独立长文；[InternData-A1](https://huggingface.co/datasets/InternRobotics/InternData-A1)用于核对数据入口。
+- **个人推断：**本页的硬件与风险判断是学习规划，并非作者对任意本体的部署保证。

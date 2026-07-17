@@ -53,6 +53,14 @@ title: InternVLA-N1：像素目标与潜在计划的双系统 VLN
 
 System 1 是多目标条件的 diffusion policy：输入当前观测与中间计划，输出候选短轨迹并处理局部变化。该分工应被理解为“规划频率”和“控制频率”解耦，不代表慢系统的语言判断永远正确。
 
+将 System 1 的去噪训练写成阅读用的条件扩散目标，可表示为：
+
+$$
+\mathcal{L}_{\mathrm{S1}}=\mathbb{E}_{\tau,\epsilon,k}\left[\left\|\epsilon-\epsilon_\theta(\tau_k,k\mid o_t,p_t)\right\|_2^2\right].
+$$
+
+其中 $\tau$ 是专家短程轨迹，$\tau_k$ 是第 $k$ 个去噪步的带噪轨迹，$o_t$ 为最新视觉观测，$p_t$ 为 System 2 异步提供的 pixel goal 或 latent plan，$\epsilon_\theta$ 为 System 1 的噪声预测器。这个式子用于说明“计划条件如何进入局部轨迹生成”；精确的 token 与调度器配置仍应以论文/代码为准。
+
 ## 3. InternData-N1：数据为何是方法的一半
 
 <figure class="paper-figure">

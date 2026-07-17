@@ -141,4 +141,5 @@ SR 是成功率，TR 是 tracking rate，CR 是碰撞率；三者必须一起读
 - **论文事实：**[TrackVLA 论文](https://arxiv.org/abs/2505.23189)、[官方项目页](https://wsakobe.github.io/TrackVLA-web/)；Fig. 1–3、方法和实验。
 - **OmTrackVLA 官方材料：**[GitHub README](https://github.com/om-ai-lab/OmTrackVLA)、[0.6B 模型卡](https://huggingface.co/omlab/OmTrackVLA-0.6B)。
 - **VLX-Go 官方材料：**[GitHub README](https://github.com/om-ai-lab/VLX-Go)、[Om AI Lab 技术博客](https://om-ai-lab.github.io/index.html)。
+- **辅助解读：**未找到能覆盖 TrackVLA、OmTrackVLA 与 VLX-Go 三者且优于原论文/官方材料的独立技术长文；因此不以泛泛二手文章替代一手来源。
 - **个人推断：**硬件栏与“演进路线”的学习组织方式是笔记作者的总结，不是任一团队的官方技术声明。
